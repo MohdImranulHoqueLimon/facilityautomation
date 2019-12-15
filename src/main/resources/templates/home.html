@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Spring Boot Mobile Computing</title>
+    <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+</head>
+
+<body>
+<h1>Iot Facility Automation</h1>
+<div style="align-content: center">
+    <input type="text" name="name" id="name" value=""/>
+    <input type="text" name="age" id="age" value=""/>
+
+    <button onclick="sendData()">Send Data</button>
+</div>
+</body>
+
+<script type="text/javascript">
+    function sendData() {
+        var xml = '<requestdto> <name>'+$('#name').val()+'</name></requestdto>';
+        $.ajax({
+            url: '/iot/gateway/send',
+            type: "POST",
+            dataType: "xml",
+            contentType: "application/xml",
+            data: xml,
+            success: function (response) {
+                console.log(response);
+            }
+        });
+    }
+</script>
+</html>

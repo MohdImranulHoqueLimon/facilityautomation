@@ -1,8 +1,12 @@
 package frausas.mobilecomputing.facilityautomation.Sensons;
 
+import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.ConcurrentCoapResource;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 
@@ -10,6 +14,22 @@ public class MyResource extends ConcurrentCoapResource {
 
     public MyResource(String name) {
         super(name, SINGLE_THREADED);
+
+        setObservable(true); // enable observing
+        setObserveType(CoAP.Type.CON); // configure the notification type to CONs
+        getAttributes().setObservable(); // mark observable in the Link-Format
+
+        // schedule a periodic update task, otherwise let events call changed()
+        Timer timer = new Timer();
+        timer.schedule(new UpdateTask(), 0, 2000);
+    }
+
+    private class UpdateTask extends TimerTask {
+        @Override
+        public void run() {
+            // .. periodic update of the resource
+            changed(); // notify all observers
+        }
     }
 
     @Override

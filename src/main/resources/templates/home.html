@@ -4,32 +4,47 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Spring Boot Mobile Computing</title>
-    <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 </head>
 
 <body>
-<h1>Iot Facility Automation</h1>
+<!--<h1>Iot Facility Automation</h1>
 <div style="align-content: center">
     <input type="text" name="name" id="name" value=""/>
     <input type="text" name="age" id="age" value=""/>
 
     <button onclick="sendData()">Send Data</button>
+</div>-->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            Iot Facility Automation
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <div style="width: 20%; height: 20%; background: #d5d5d5;">
+                    Light Sensor
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="width: 20%; height: 20%; background: #d5d5d5;">
+                    Alarm Sensor
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 </body>
 
-<script type="text/javascript">
-    function sendData() {
-        var xml = '<requestdto> <name>'+$('#name').val()+'</name></requestdto>';
-        $.ajax({
-            url: '/gateway/send',
-            type: "POST",
-            dataType: "xml",
-            contentType: "application/xml",
-            data: xml,
-            success: function (response) {
-                console.log(response);
-            }
-        });
-    }
-</script>
+<footer>
+    <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
+    <script type="text/javascript" th:src="@{/js/facility.js}"></script>
+</footer>
 </html>

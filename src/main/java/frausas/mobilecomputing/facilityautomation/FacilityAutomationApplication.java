@@ -38,7 +38,7 @@ public class FacilityAutomationApplication {
                     @Override
                     public void onLoad(CoapResponse response) {
                         String jsonResponse = response.getResponseText();
-                        System.out.println("NOTIFICATION: " + jsonResponse);
+                        //System.out.println("NOTIFICATION: " + jsonResponse);
                         try {
                             SecuritySensorState securitySensorState = mapper.readValue(jsonResponse, SecuritySensorState.class);
                             changeLightState(securitySensorState.getTotalPeople());
@@ -63,6 +63,8 @@ public class FacilityAutomationApplication {
                                         String jsonString = mapper.writeValueAsString(request);
                                         CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
                                         jsonString = coapResponse.getResponseText();
+
+                                        System.out.println("NOTIFICATION---: " + jsonString);
                                     } catch (Exception ex) {
                                         ex.printStackTrace();
                                     }

@@ -47,7 +47,7 @@ public class LightSensor extends ConcurrentCoapResource {
     @Override
     public void handlePOST(CoapExchange exchange) {
         exchange.accept();
-
+        System.out.println("recieve call in light sensor");
         if (exchange.getRequestOptions().isContentFormat(MediaTypeRegistry.APPLICATION_JSON)) {
             String json = exchange.getRequestText();
             try {
@@ -61,7 +61,7 @@ public class LightSensor extends ConcurrentCoapResource {
                 exchange.respond(CREATED, responseJson);
 
             } catch (Exception ex) {
-
+                ex.printStackTrace();
             }
         } else {
             exchange.respond(CREATED);

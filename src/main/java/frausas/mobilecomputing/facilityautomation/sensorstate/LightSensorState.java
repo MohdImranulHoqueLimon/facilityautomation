@@ -5,4 +5,8 @@ import lombok.Data;
 @Data
 public class LightSensorState {
     boolean on;
+
+    public LightSensorState(){
+        on = true;
+    }
 }

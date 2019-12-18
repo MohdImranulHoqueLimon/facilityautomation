@@ -13,6 +13,20 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FacilityAutomationApplication {
 
+    private void changeLightState(boolean state) {
+        CoapClient lightClient = new CoapClient("coap://localhost:" + SensorConstants.LIGHT_SENSOR_PORT + "/" + SensorConstants.LIGHT_SENSOR_ENDPOINT);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            LightSensorRequest request = new LightSensorRequest();
+            request.setOn(state);
+            String jsonString = mapper.writeValueAsString(request);
+            CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
+            jsonString = coapResponse.getResponseText();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(FacilityAutomationApplication.class, args);
 
@@ -30,6 +44,7 @@ public class FacilityAutomationApplication {
 
         CoapClient securityClient = new CoapClient("coap://localhost:" + SensorConstants.SECURITY_ACCESS_SENSOR_PORT + "/" + SensorConstants.SECURITY_ACCESS_SENSOR_ENDPOINT);
         CoapClient lightClient = new CoapClient("coap://localhost:" + SensorConstants.LIGHT_SENSOR_PORT + "/" + SensorConstants.LIGHT_SENSOR_ENDPOINT);
+        ObjectMapper mapper = new ObjectMapper();
 
         CoapObserveRelation securityObserver = securityClient.observe(
                 new CoapHandler() {
@@ -38,20 +53,27 @@ public class FacilityAutomationApplication {
                         String jsonResponse = response.getResponseText();
                         System.out.println("NOTIFICATION: " + jsonResponse);
                         try {
-                            ObjectMapper mapper = new ObjectMapper();
                             SecuritySensorState securitySensorState = mapper.readValue(jsonResponse, SecuritySensorState.class);
 
                             if(securitySensorState.getTotalPeople() == 0) {
-
-                                LightSensorRequest request = new LightSensorRequest();
-                                request.setOn(false);
-                                String jsonString = mapper.writeValueAsString(request);
-
-                                CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
-                                jsonString = coapResponse.getResponseText();
+                                new Thread()
+                                {
+                                    public void run() {
+                                        try {
+                                            LightSensorRequest request = new LightSensorRequest();
+                                            request.setOn(false);
+                                            String jsonString = mapper.writeValueAsString(request);
+                                            CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
+                                            jsonString = coapResponse.getResponseText();
+                                            System.out.println("blah");
+                                        }catch (Exception ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    }
+                                }.start();
                             }
                         } catch (Exception ex) {
-
+                            ex.printStackTrace();
                         }
                     }
 
@@ -66,7 +88,7 @@ public class FacilityAutomationApplication {
                     @Override
                     public void onLoad(CoapResponse response) {
                         String jsonResponse = response.getResponseText();
-                        System.out.println("light notfication: " + jsonResponse);
+                        System.out.println("light state: " + jsonResponse);
                     }
 
                     @Override

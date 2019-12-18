@@ -37,6 +37,7 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
     private class UpdateTask extends TimerTask {
         @Override
         public void run() {
+
             int numberOfTotalEntryOrExit = randomPeopleEntryOrExit[counter++];
 
             if(numberOfTotalEntryOrExit > 0) {

@@ -13,21 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FacilityAutomationApplication {
 
-    private void changeLightState(boolean state) {
-        CoapClient lightClient = new CoapClient("coap://localhost:" + SensorConstants.LIGHT_SENSOR_PORT + "/" + SensorConstants.LIGHT_SENSOR_ENDPOINT);
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            LightSensorRequest request = new LightSensorRequest();
-            request.setOn(state);
-            String jsonString = mapper.writeValueAsString(request);
-            CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
-            jsonString = coapResponse.getResponseText();
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) {
+
         SpringApplication.run(FacilityAutomationApplication.class, args);
 
         CoapServer securityServer = new CoapServer(SensorConstants.SECURITY_ACCESS_SENSOR_PORT);
@@ -54,24 +41,7 @@ public class FacilityAutomationApplication {
                         System.out.println("NOTIFICATION: " + jsonResponse);
                         try {
                             SecuritySensorState securitySensorState = mapper.readValue(jsonResponse, SecuritySensorState.class);
-
-                            if(securitySensorState.getTotalPeople() == 0) {
-                                new Thread()
-                                {
-                                    public void run() {
-                                        try {
-                                            LightSensorRequest request = new LightSensorRequest();
-                                            request.setOn(false);
-                                            String jsonString = mapper.writeValueAsString(request);
-                                            CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
-                                            jsonString = coapResponse.getResponseText();
-                                            System.out.println("blah");
-                                        }catch (Exception ex) {
-                                            ex.printStackTrace();
-                                        }
-                                    }
-                                }.start();
-                            }
+                            changeLightState(securitySensorState.getTotalPeople());
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -80,6 +50,27 @@ public class FacilityAutomationApplication {
                     @Override
                     public void onError() {
                         System.err.println("OBSERVING FAILED (press enter to exit)");
+                    }
+
+                    private void changeLightState(int totalPeople) {
+                        boolean onOrOff = totalPeople > 0;
+                        try {
+                            new Thread() {
+                                public void run() {
+                                    try {
+                                        LightSensorRequest request = new LightSensorRequest();
+                                        request.setOn(onOrOff);
+                                        String jsonString = mapper.writeValueAsString(request);
+                                        CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
+                                        jsonString = coapResponse.getResponseText();
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+                                }
+                            }.start();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 });
 
@@ -96,6 +87,20 @@ public class FacilityAutomationApplication {
                         System.err.println("OBSERVING FAILED (press enter to exit)");
                     }
                 });
+    }
+
+    private void changeLightState(boolean state) {
+        CoapClient lightClient = new CoapClient("coap://localhost:" + SensorConstants.LIGHT_SENSOR_PORT + "/" + SensorConstants.LIGHT_SENSOR_ENDPOINT);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            LightSensorRequest request = new LightSensorRequest();
+            request.setOn(state);
+            String jsonString = mapper.writeValueAsString(request);
+            CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
+            jsonString = coapResponse.getResponseText();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

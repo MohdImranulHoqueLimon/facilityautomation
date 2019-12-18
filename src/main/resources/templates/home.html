@@ -21,7 +21,7 @@
     function sendData() {
         var xml = '<requestdto> <name>'+$('#name').val()+'</name></requestdto>';
         $.ajax({
-            url: '/iot/gateway/send',
+            url: '/gateway/send',
             type: "POST",
             dataType: "xml",
             contentType: "application/xml",

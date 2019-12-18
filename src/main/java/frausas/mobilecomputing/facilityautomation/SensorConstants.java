@@ -7,4 +7,6 @@ public class SensorConstants {
     public static final String SECURITY_ACCESS_SENSOR_ENDPOINT = "security-access";
     public static final String ALARM_SENSOR_ENDPOINT = "security-alarm";
 
+    public static final String SECURITY_PIN = "13579";
+
 }

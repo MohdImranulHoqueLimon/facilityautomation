@@ -6,9 +6,7 @@ import frausas.mobilecomputing.facilityautomation.SensorConstants;
 import frausas.mobilecomputing.facilityautomation.dto.RequestDto;
 import frausas.mobilecomputing.facilityautomation.dto.SecuritySensorRequest;
 import frausas.mobilecomputing.facilityautomation.sensorstate.SecuritySensorState;
-import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.CoapServer;
+import org.eclipse.californium.core.*;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +47,20 @@ public class ApiGateway {
             CoapResponse coapResponse = client.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
             jsonString = coapResponse.getResponseText();
             securitySensorState = mapper.readValue(jsonString, SecuritySensorState.class);
+
+            CoapObserveRelation relation = client.observe(
+                    new CoapHandler() {
+                        @Override
+                        public void onLoad(CoapResponse response) {
+                            String content = response.getResponseText();
+                            System.out.println("NOTIFICATION: " + content);
+                        }
+
+                        @Override
+                        public void onError() {
+                            System.err.println("OBSERVING FAILED (press enter to exit)");
+                        }
+                    });
 
         } catch (Exception ex) {
 

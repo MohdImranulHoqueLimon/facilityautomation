@@ -26,8 +26,6 @@ public class ApiGateway {
             CoapResponse coapResponse = client.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
             jsonString = coapResponse.getResponseText();
             requestDto = mapper.readValue(jsonString, RequestDto.class);
-
-
         } catch (Exception ex) {
 
         }

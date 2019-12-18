@@ -23,7 +23,7 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
 
     public SecurityAccessSensor(String name) {
 
-        super(name, SINGLE_THREADED);
+        super(name, 2);
         sensorState = new SecuritySensorState();
 
         setObservable(true);
@@ -39,6 +39,7 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
         public void run() {
 
             int numberOfTotalEntryOrExit = randomPeopleEntryOrExit[counter++];
+            System.out.println(numberOfTotalEntryOrExit);
 
             if(numberOfTotalEntryOrExit > 0) {
                 sensorState.setTotalPeople(sensorState.getTotalPeople() + numberOfTotalEntryOrExit);
@@ -50,10 +51,10 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
                 sensorState.setTotalPeople(sensorState.getTotalPeople() - numberOfTotalEntryOrExit);
                 sensorState.setTotalEntered(0);
                 sensorState.setTotalExited(numberOfTotalEntryOrExit);
+            }
 
-                if(sensorState.getTotalPeople() < 0) {
-                    sensorState.setTotalPeople(0);
-                }
+            if(sensorState.getTotalPeople() < 0) {
+                sensorState.setTotalPeople(0);
             }
 
             if(counter == randomPeopleEntryOrExit.length) {

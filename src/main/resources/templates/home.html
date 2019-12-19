@@ -7,6 +7,168 @@
 
     <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+
+    <style type="text/css">
+        body {
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            margin: 0 auto;
+            width: 90%;
+        }
+
+        .perspective {
+            background: url("http://dc428.4shared.com/img/QWu4ziBq/s3/doorBorder.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            position: relative;
+            display: inline;
+            float: left;
+            height: 274px;
+            width: 147px;
+            margin: 20px;
+            margin-left: 0px;
+            -webkit-perspective: 450;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        .thumb {
+            background: url("http://dc428.4shared.com/img/-vayshJ-/s3/ClassDoor.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            width: 147px;
+            height: 274px;
+            position: absolute;
+            box-sizing: border-box;
+            border-radius: 3px;
+            box-shadow: 0 0 0 10px rgba(255, 255, 255, .0) inset;
+            transition: 1s transform linear;
+            transform-origin: left;
+            cursor: pointer;
+        }
+
+        .thumbOpened {
+            transform: rotateY(-90deg);
+            transform-origin: 8px;
+            transition: .5s linear;
+        }
+
+        .alert {
+            padding: 8px 35px 8px 14px;
+            margin-bottom: 20px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+            background-color: #fcf8e3;
+            border: 1px solid #fbeed5;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            color: #000;
+            transform-origin: left;
+            transform: rotateY(180deg);
+            opacity: 0;
+            animation-name: go;
+            animation-duration: 0.5s;
+            animation-timing-function: ease-in-out;
+            animation-fill-mode: forwards;
+            animation-delay: 0.5s;
+            width: 350px;
+        }
+
+        @keyframes go {
+            100% {
+                opacity: 1;
+                transform: rotateY(0deg);
+            }
+        }
+
+        #bulb {
+            width: 15%;
+            margin-left: 43%;
+            margin-top: 20px;
+        }
+
+        .filament {
+            transition: all 0.2s ease;
+        }
+
+        .cls-5 {
+            transition: all 1s ease;
+        }
+
+        #toggle:checked ~ body {
+            background: red;
+        }
+
+        #toggle:checked ~ #bulb .filament {
+            fill: orange;
+        }
+
+        #toggle:checked ~ #bulb .cls-5 {
+            fill: #FFF9A3;
+        }
+
+        .prong {
+            fill: #6d6e71;
+        }
+
+        .cls-2 {
+            fill: #808285;
+        }
+
+        .cls-3 {
+            fill: #939598;
+        }
+
+        .cls-4 {
+            opacity: 0.51;
+        }
+
+        .cls-5 {
+            fill: #d1d3d4;
+        }
+
+        #toggle {
+            position: absolute;
+            appearance: none;
+            cursor: pointer;
+            left: -100%;
+            top: -100%;
+        }
+
+        #toggle + label {
+            font-family: sans-serif;
+            position: absolute;
+            cursor: pointer;
+            width: 60px;
+            height: 100px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            padding: 26px 10px;
+            font-size: 15px;
+            text-align: center;
+            -webkit-font-smoothing: antialiased;
+            cursor: pointer;
+            transition: all 500ms ease;
+            border: 2px solid black;
+            border-bottom: 30px solid black;
+        }
+
+        #toggle + label:after {
+            content: "OFF"
+        }
+
+        #toggle:checked + label {
+            border-top: 30px solid black;
+            border-bottom: 3px solid black;
+        }
+
+        #toggle:checked + label:after {
+            content: "ON"
+        }
+    </style>
 </head>
 
 <body>
@@ -18,22 +180,68 @@
     <button onclick="sendData()">Send Data</button>
 </div>-->
 
+<div class="row">
+    <div class="col-md-12 text-center" style="background: #2e6da4;">
+        <h3 style="color: white; font-weight: bold;">IOT FACILITY AUTOMATION</h3>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            Iot Facility Automation
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
             <div class="col-md-6">
-                <div style="width: 20%; height: 20%; background: #d5d5d5;">
-                    Light Sensor
+                <div class="col-md-6">
+                    <div style="width: 20%; height: 20%; float: left;">
+                        <div class="perspective" onclick="openDoor(this)">
+                            <div class="thumb">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="margin-top: 20px;">
+                    <div class="row"><label style="font-size: 25px;">Total Entry: </label>
+                        <span style="font-size: 25px; color: #5cb85c;" id="total-entry"></span></div>
+                    <div class="row"><label style="font-size: 25px; color: red;">Total Exit: </label>
+                        <span style="font-size: 25px;" id="total-exit"></span></div>
+                    <div class="row"><label style="font-size: 25px;">Total People Inside: </label>
+                        <span style="font-size: 25px;" id="total-people-inside"></span></div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div style="width: 20%; height: 20%; background: #d5d5d5;">
-                    Alarm Sensor
+            <div class="col-md-6" style="margin-top: 20px;">
+                <div style="background: #d5d5d5;">
+                    <input type="checkbox" checked name="toggle" id="toggle"/>
+                    <label for="toggle"></label>
+                    <svg xmlns="http://www.w3.org/2000/svg" id="bulb" viewBox="0 0 154.72 276.77">
+                        <path d="M55.2 139.26l-.5 1.67 4.63 15.48.5-1.67-4.63-15.48zM85.62 123.84l-.5 1.67 4.63 15.48.49-1.67-4.62-15.48z"
+                              class="filament"/>
+                        <path d="M90.24 139.32l-.49 1.67 4.62 15.48.5-1.67-4.63-15.48zM68.11 123.84l-.5 1.67 4.62 15.48.5-1.67-4.62-15.48z"
+                              class="filament"/>
+                        <path d="M72.73 139.32l-.5 1.67 4.63 15.48.5-1.67-4.63-15.48zM58.85 154.8l.5 1.67 4.63-15.48-.5-1.67-4.63 15.48z"
+                              class="filament"/>
+                        <path d="M76.36 154.8l.5 1.67 4.63-15.48-.5-1.67-4.63 15.48zM63.48 139.32l.5 1.67 4.62-15.48-.49-1.67-4.63 15.48zM80.99 139.32l.5 1.67 4.62-15.48-.49-1.67-4.63 15.48zM93.88 154.8l.49 1.67L99 140.99l-.5-1.67-4.62 15.48z"
+                              class="filament"/>
+                        <rect width="2.36" height="59.85" x="53.05" y="138.65" class="prong" rx="1.18" ry="1.18"/>
+                        <rect width="2.36" height="58.81" x="98.3" y="138.65" class="prong" rx="1.18" ry="1.18"/>
+                        <path d="M41.05 193.11h71.61v46.03H41.05z" class="cls-2"/>
+                        <ellipse cx="76.85" cy="239.14" class="cls-2" rx="35.81" ry="37.63"/>
+                        <rect width="83" height="6.33" x="276.75" y="505.69" class="cls-3" rx="3.17" ry="3.17"
+                              transform="rotate(13.12 1474.696 -687.534)"/>
+                        <rect width="83" height="6.33" x="277.26" y="518.19" class="cls-3" rx="3.17" ry="3.17"
+                              transform="rotate(13.12 1475.208 -675.038)"/>
+                        <rect width="83" height="6.33" x="277.51" y="530.7" class="cls-3" rx="3.17" ry="3.17"
+                              transform="rotate(13.12 1475.454 -662.554)"/>
+                        <rect width="27.39" height="6.33" x="278.36" y="536.89" class="cls-3" rx="3.17" ry="3.17"
+                              transform="rotate(13.12 1448.504 -656.327)"/>
+                        <rect width="27.47" height="6.33" x="330.82" y="499.48" class="cls-3" rx="3.17" ry="3.17"
+                              transform="rotate(13.12 1500.99 -693.73)"/>
+                        <g class="cls-4">
+                            <rect width="94.5" height="30.6" x="30.11" y="169.86" class="cls-5" rx="12.26" ry="12.26"/>
+                            <circle cx="77.36" cy="77.36" r="77.36" class="cls-5"/>
+                            <path d="M16.24 124.35c4 0 13.86 40.77 13.86 57.21h94.5c0-16.44 9.88-57.21 13.86-57.21H16.24z"
+                                  class="cls-5"/>
+                        </g>
+                    </svg>
+
                 </div>
             </div>
         </div>
@@ -44,7 +252,52 @@
 
 <footer>
     <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.xml2json.js}"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
     <script type="text/javascript" th:src="@{/js/facility.js}"></script>
+
+    <script type="text/javascript">
+        function openDoor(field) {
+            var y = $(field).find(".thumb");
+            var x = y.attr("class");
+
+            if (y.hasClass("thumbOpened")) {
+                y.removeClass("thumbOpened");
+            } else {
+                $(".thumb").removeClass("thumbOpened");
+                y.addClass("thumbOpened");
+            }
+        }
+
+        function sendData() {
+            $.ajax({
+                url: '/gateway/get-all-data',
+                type: "GET",
+                dataType: "xml",
+                contentType: "application/xml",
+                success: function (xmlResponse) {
+
+                    var xmlToJson = $.xml2json(xmlResponse);
+                    var lightSensorState = xmlToJson.lightSensorState;
+                    var securitySensorState = xmlToJson.securitySensorState;
+
+                    openDoor('.perspective');
+                    if (lightSensorState.on == 'true') {
+                        $('#toggle').prop("checked", true);
+                    }
+                    if (lightSensorState.on == 'false') {
+                        $('#toggle').prop("checked", false);
+                    }
+
+                    $('#total-entry').html(securitySensorState.totalEntered);
+                    $('#total-exit').html(securitySensorState.totalExited);
+                    $('#total-people-inside').html(securitySensorState.totalPeople);
+                }
+            });
+        }
+
+        setInterval(sendData, 3000);
+
+    </script>
 </footer>
 </html>

@@ -18,7 +18,7 @@ import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 public class SecurityAccessSensor extends ConcurrentCoapResource {
 
     public static SecuritySensorState sensorState;
-    private int[] randomPeopleEntryOrExit = {5, -3, -2, 1, 2, -1, 5, -4, -2};
+    private int[] randomPeopleEntryOrExit = {5, 10, -2, 1, 2, -1, -5, -4, -2, -20, 5};
     private int counter = 0;
 
     public SecurityAccessSensor(String name) {
@@ -53,6 +53,10 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
             }
 
             if(sensorState.getTotalPeople() < 0) {
+                sensorState.setTotalPeople(0);
+            }
+
+            if(counter == 2) {
                 sensorState.setTotalPeople(0);
             }
 

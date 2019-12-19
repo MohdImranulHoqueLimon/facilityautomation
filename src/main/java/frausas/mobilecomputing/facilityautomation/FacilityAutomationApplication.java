@@ -4,16 +4,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import frausas.mobilecomputing.facilityautomation.Sensons.LightSensor;
 import frausas.mobilecomputing.facilityautomation.Sensons.SecurityAccessSensor;
 import frausas.mobilecomputing.facilityautomation.dto.LightSensorRequest;
+import frausas.mobilecomputing.facilityautomation.sensorstate.AllSensorState;
+import frausas.mobilecomputing.facilityautomation.sensorstate.LightSensorState;
 import frausas.mobilecomputing.facilityautomation.sensorstate.SecuritySensorState;
 import org.eclipse.californium.core.*;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class FacilityAutomationApplication {
 
+    @Autowired
+    public static AllSensorState allSensorState;
+
     public static void main(String[] args) {
+
+        allSensorState = new AllSensorState();
 
         SpringApplication.run(FacilityAutomationApplication.class, args);
 
@@ -42,6 +50,8 @@ public class FacilityAutomationApplication {
                         try {
                             SecuritySensorState securitySensorState = mapper.readValue(jsonResponse, SecuritySensorState.class);
                             changeLightState(securitySensorState.getTotalPeople());
+
+                            allSensorState.setSecuritySensorState(securitySensorState);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -63,8 +73,9 @@ public class FacilityAutomationApplication {
                                         String jsonString = mapper.writeValueAsString(request);
                                         CoapResponse coapResponse = lightClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
                                         jsonString = coapResponse.getResponseText();
-
-                                        System.out.println("NOTIFICATION---: " + jsonString);
+                                        LightSensorState lightSensorState = mapper.readValue(jsonString, LightSensorState.class);
+                                        allSensorState.setLightSensorState(lightSensorState);
+                                        //System.out.println("NOTIFICATION---: " + jsonString);
                                     } catch (Exception ex) {
                                         ex.printStackTrace();
                                     }
@@ -80,10 +91,16 @@ public class FacilityAutomationApplication {
                 new CoapHandler() {
                     @Override
                     public void onLoad(CoapResponse response) {
-                        String jsonResponse = response.getResponseText();
-                        System.out.println("light state: " + jsonResponse);
-                    }
+                        try {
+                            String jsonResponse = response.getResponseText();
+                            //System.out.println("light state: " + jsonResponse);
+                            LightSensorState lightSensorState = mapper.readValue(jsonResponse, LightSensorState.class);
+                            allSensorState.setLightSensorState(lightSensorState);
+                            System.out.println(mapper.writeValueAsString(allSensorState));
+                        } catch (Exception ex) {
 
+                        }
+                    }
                     @Override
                     public void onError() {
                         System.err.println("OBSERVING FAILED (press enter to exit)");

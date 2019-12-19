@@ -1,17 +1,19 @@
 package frausas.mobilecomputing.facilityautomation.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import frausas.mobilecomputing.facilityautomation.FacilityAutomationApplication;
 import frausas.mobilecomputing.facilityautomation.Sensons.MyResource;
 import frausas.mobilecomputing.facilityautomation.SensorConstants;
 import frausas.mobilecomputing.facilityautomation.dto.RequestDto;
 import frausas.mobilecomputing.facilityautomation.dto.SecuritySensorRequest;
+import frausas.mobilecomputing.facilityautomation.sensorstate.AllSensorState;
 import frausas.mobilecomputing.facilityautomation.sensorstate.SecuritySensorState;
 import org.eclipse.californium.core.*;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("gateway/")
+@RequestMapping("/gateway/")
 public class ApiGateway {
 
     @PostMapping("send")
@@ -30,6 +32,11 @@ public class ApiGateway {
 
         }
         return requestDto;
+    }
+
+    @GetMapping("get-all-data")
+    public AllSensorState getData() {
+        return FacilityAutomationApplication.allSensorState;
     }
 
     @PostMapping("security")

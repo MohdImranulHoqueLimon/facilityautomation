@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class AllSensorState {
     LightSensorState lightSensorState;
     SecuritySensorState securitySensorState;
+    DangerAlaramSensorState alaramSensorState;
 }

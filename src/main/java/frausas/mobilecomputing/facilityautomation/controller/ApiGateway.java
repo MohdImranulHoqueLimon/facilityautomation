@@ -29,6 +29,10 @@ public class ApiGateway {
             ObjectMapper mapper = new ObjectMapper();
             String jsonString = mapper.writeValueAsString(requestDto);
 
+            if (requestDto.isEvacuate() == true) {
+                FacilityAutomationApplication.changeAlarmState(false);
+            }
+
             CoapResponse coapResponse = client.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
             jsonString = coapResponse.getResponseText();
             securitySensorState = mapper.readValue(jsonString, SecuritySensorState.class);
@@ -36,6 +40,12 @@ public class ApiGateway {
 
         }
         return securitySensorState;
+    }
+
+    @PostMapping("stop-alarming")
+    public SecuritySensorState stopAlarming(@RequestBody SecuritySensorRequest requestDto) {
+        FacilityAutomationApplication.changeAlarmState(false);
+        return null;
     }
 
 }

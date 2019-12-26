@@ -29,7 +29,7 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
         getAttributes().setObservable();
 
         Timer timer = new Timer();
-        timer.schedule(new UpdateTask(), 0, 10000);
+        timer.schedule(new UpdateTask(), 0, 7000);
     }
 
     private class UpdateTask extends TimerTask {
@@ -85,6 +85,7 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
 
                 if(requestDto.isEvacuate() == true) {
                     sensorState.setTotalPeople(0);
+                    sensorState.setHasThief(false);
                 }
                 if(securityPin != null && securityPin.equals(SensorConstants.SECURITY_PIN) == false) {
                     sensorState.setHasThief(true);

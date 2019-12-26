@@ -77,4 +77,4 @@ function getAllData() {
     });
 }
 
-setInterval(getAllData, 3000);
+setInterval(getAllData, 1000);

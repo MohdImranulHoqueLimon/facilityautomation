@@ -7,6 +7,6 @@ public class DangerAlaramSensorState {
     boolean on;
 
     public DangerAlaramSensorState(){
-        on = true;
+        on = false;
     }
 }

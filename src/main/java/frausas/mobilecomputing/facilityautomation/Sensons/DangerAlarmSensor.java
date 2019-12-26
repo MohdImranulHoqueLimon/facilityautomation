@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frausas.mobilecomputing.facilityautomation.dto.LightSensorRequest;
 import frausas.mobilecomputing.facilityautomation.sensorstate.DangerAlaramSensorState;
-import frausas.mobilecomputing.facilityautomation.sensorstate.LightSensorState;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
@@ -17,24 +16,26 @@ import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 
 public class DangerAlarmSensor extends ConcurrentCoapResource {
 
-    public static DangerAlaramSensorState sensorState;
+    public static DangerAlaramSensorState dangerAlaramSensorState;
 
     public DangerAlarmSensor(String name) {
+
         super(name, SINGLE_THREADED);
-        sensorState = new DangerAlaramSensorState();
+        dangerAlaramSensorState = new DangerAlaramSensorState();
 
         setObservable(true);
         setObserveType(CoAP.Type.CON);
         getAttributes().setObservable();
+
         Timer timer = new Timer();
-        timer.schedule(new UpdateTask(), 0, 1000);
+        timer.schedule(new UpdateTask(), 0, 1500);
     }
 
     @Override
     public void handleGET(CoapExchange exchange) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            String jsonString = mapper.writeValueAsString(sensorState);
+            String jsonString = mapper.writeValueAsString(dangerAlaramSensorState);
             exchange.respond(jsonString);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -49,8 +50,8 @@ public class DangerAlarmSensor extends ConcurrentCoapResource {
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 LightSensorRequest lightSensorRequest = mapper.readValue(json, LightSensorRequest.class);
-                sensorState.setOn(lightSensorRequest.isOn());
-                String responseJson = mapper.writeValueAsString(sensorState);
+                dangerAlaramSensorState.setOn(lightSensorRequest.isOn());
+                String responseJson = mapper.writeValueAsString(dangerAlaramSensorState);
                 exchange.respond(CREATED, responseJson);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -63,6 +64,7 @@ public class DangerAlarmSensor extends ConcurrentCoapResource {
     private class UpdateTask extends TimerTask {
         @Override
         public void run() {
+            System.out.println(dangerAlaramSensorState.toString());
             changed();
         }
     }

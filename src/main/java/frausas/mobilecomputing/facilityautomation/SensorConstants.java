@@ -3,9 +3,9 @@ package frausas.mobilecomputing.facilityautomation;
 import java.util.Random;
 
 public class SensorConstants {
-    public static final int SECURITY_ACCESS_SENSOR_PORT = 8085;
-    public static final int ALARM_SENSOR_PORT = 8086;
-    public static final int LIGHT_SENSOR_PORT = 8087;
+    public static final int SECURITY_ACCESS_SENSOR_PORT = 5683;
+    public static final int ALARM_SENSOR_PORT = 5684;
+    public static final int LIGHT_SENSOR_PORT = 5685;
 
     public static final String SECURITY_ACCESS_SENSOR_ENDPOINT = "security-access";
     public static final String ALARM_SENSOR_ENDPOINT = "security-alarm";

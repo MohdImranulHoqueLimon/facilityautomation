@@ -28,7 +28,7 @@ public class DangerAlarmSensor extends ConcurrentCoapResource {
         getAttributes().setObservable();
 
         Timer timer = new Timer();
-        timer.schedule(new UpdateTask(), 0, 1500);
+        timer.schedule(new UpdateTask(), 0, 7000);
     }
 
     @Override

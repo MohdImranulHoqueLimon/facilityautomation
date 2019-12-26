@@ -26,7 +26,7 @@ public class LightSensor extends ConcurrentCoapResource {
         setObserveType(CoAP.Type.CON);
         getAttributes().setObservable();
         Timer timer = new Timer();
-        timer.schedule(new UpdateTask(), 0, 1000);
+        timer.schedule(new UpdateTask(), 0, 7000);
     }
 
     @Override

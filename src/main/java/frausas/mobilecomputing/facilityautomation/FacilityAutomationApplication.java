@@ -46,11 +46,10 @@ public class FacilityAutomationApplication {
                     @Override
                     public void onLoad(CoapResponse response) {
                         String jsonResponse = response.getResponseText();
-                        //System.out.println("NOTIFICATION: " + jsonResponse);
+                        System.out.println(jsonResponse);
                         try {
                             SecuritySensorState securitySensorState = mapper.readValue(jsonResponse, SecuritySensorState.class);
                             changeLightState(securitySensorState.getTotalPeople());
-
                             allSensorState.setSecuritySensorState(securitySensorState);
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -75,7 +74,6 @@ public class FacilityAutomationApplication {
                                         jsonString = coapResponse.getResponseText();
                                         LightSensorState lightSensorState = mapper.readValue(jsonString, LightSensorState.class);
                                         allSensorState.setLightSensorState(lightSensorState);
-                                        //System.out.println("NOTIFICATION---: " + jsonString);
                                     } catch (Exception ex) {
                                         ex.printStackTrace();
                                     }
@@ -93,10 +91,8 @@ public class FacilityAutomationApplication {
                     public void onLoad(CoapResponse response) {
                         try {
                             String jsonResponse = response.getResponseText();
-                            //System.out.println("light state: " + jsonResponse);
                             LightSensorState lightSensorState = mapper.readValue(jsonResponse, LightSensorState.class);
                             allSensorState.setLightSensorState(lightSensorState);
-                            System.out.println(mapper.writeValueAsString(allSensorState));
                         } catch (Exception ex) {
 
                         }

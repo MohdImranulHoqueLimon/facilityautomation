@@ -18,12 +18,10 @@ import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 public class SecurityAccessSensor extends ConcurrentCoapResource {
 
     public static SecuritySensorState sensorState;
-    private int[] randomPeopleEntryOrExit = {5, 10, -2, 1, 2, -1, -5, -4, -2, -20, 5};
-    private int counter = 0;
 
     public SecurityAccessSensor(String name) {
 
-        super(name, 2);
+        super(name, 1);
         sensorState = new SecuritySensorState();
 
         setObservable(true);
@@ -31,40 +29,34 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
         getAttributes().setObservable();
 
         Timer timer = new Timer();
-        timer.schedule(new UpdateTask(), 0, 5000);
+        timer.schedule(new UpdateTask(), 0, 10000);
     }
 
     private class UpdateTask extends TimerTask {
         @Override
         public void run() {
 
-            int numberOfTotalEntryOrExit = randomPeopleEntryOrExit[counter++];
+            int numberOfTotalEntryOrExit = SensorConstants.getRandomNumberInRange(-5, 5, sensorState.getTotalPeople());
 
-            if(numberOfTotalEntryOrExit > 0) {
-                sensorState.setTotalPeople(sensorState.getTotalPeople() + numberOfTotalEntryOrExit);
-                sensorState.setTotalEntered(numberOfTotalEntryOrExit);
-                sensorState.setTotalExited(0);
-            }
-            else if(numberOfTotalEntryOrExit < 0) {
-                numberOfTotalEntryOrExit = numberOfTotalEntryOrExit * -1;
-                sensorState.setTotalPeople(sensorState.getTotalPeople() - numberOfTotalEntryOrExit);
-                sensorState.setTotalEntered(0);
-                sensorState.setTotalExited(numberOfTotalEntryOrExit);
-            }
+            if(sensorState.getTotalPeople() + numberOfTotalEntryOrExit >= 0) {
+                if(numberOfTotalEntryOrExit > 0) {
+                    sensorState.setTotalPeople(sensorState.getTotalPeople() + numberOfTotalEntryOrExit);
+                    sensorState.setTotalEntered(numberOfTotalEntryOrExit);
+                    sensorState.setTotalExited(0);
+                }
+                else if(numberOfTotalEntryOrExit < 0) {
+                    numberOfTotalEntryOrExit = numberOfTotalEntryOrExit * -1;
+                    sensorState.setTotalPeople(sensorState.getTotalPeople() - numberOfTotalEntryOrExit);
+                    sensorState.setTotalEntered(0);
+                    sensorState.setTotalExited(numberOfTotalEntryOrExit);
+                }
 
-            if(sensorState.getTotalPeople() < 0) {
-                sensorState.setTotalPeople(0);
+                if(sensorState.getTotalPeople() < 0) {
+                    sensorState.setTotalPeople(0);
+                }
+                //notify all observers
+                changed();
             }
-
-            if(counter == 2) {
-                sensorState.setTotalPeople(0);
-            }
-
-            if(counter == randomPeopleEntryOrExit.length) {
-                counter = 0;
-            }
-            //notify all observers
-            changed();
         }
     }
 
@@ -89,17 +81,15 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
                 ObjectMapper mapper = new ObjectMapper();
                 SecuritySensorRequest requestDto = mapper.readValue(json, SecuritySensorRequest.class);
 
-                if(requestDto.getPeopleEntered() > 0) {
-                    sensorState.setTotalPeople(sensorState.getTotalPeople() + requestDto.getPeopleEntered());
-                    sensorState.setTotalEntered(requestDto.getPeopleEntered());
+                String securityPin = requestDto.getPin();
+
+                if(requestDto.isEvacuate() == true) {
+                    sensorState.setTotalPeople(0);
                 }
-                if(requestDto.getPeopleExited() > 0 && sensorState.getTotalPeople() > 0) {
-                    sensorState.setTotalPeople(sensorState.getTotalPeople() - requestDto.getPeopleExited());
-                    sensorState.setTotalExited(requestDto.getPeopleExited());
-                }
-                if(requestDto.getSecurityPin().equals(SensorConstants.SECURITY_PIN) == false) {
+                if(securityPin != null && securityPin.equals(SensorConstants.SECURITY_PIN) == false) {
                     sensorState.setHasThief(true);
                 }
+                changed();
                 String responseJson = mapper.writeValueAsString(sensorState);
                 exchange.respond(CREATED, responseJson);
 

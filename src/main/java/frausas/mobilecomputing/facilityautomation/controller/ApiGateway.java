@@ -2,9 +2,7 @@ package frausas.mobilecomputing.facilityautomation.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frausas.mobilecomputing.facilityautomation.FacilityAutomationApplication;
-import frausas.mobilecomputing.facilityautomation.Sensons.MyResource;
 import frausas.mobilecomputing.facilityautomation.SensorConstants;
-import frausas.mobilecomputing.facilityautomation.dto.RequestDto;
 import frausas.mobilecomputing.facilityautomation.dto.SecuritySensorRequest;
 import frausas.mobilecomputing.facilityautomation.sensorstate.AllSensorState;
 import frausas.mobilecomputing.facilityautomation.sensorstate.SecuritySensorState;
@@ -15,24 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/gateway/")
 public class ApiGateway {
-
-    @PostMapping("send")
-    public RequestDto send(@RequestBody RequestDto requestDto) {
-
-        CoapClient client = new CoapClient("coap://localhost:8085/example");
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonString = mapper.writeValueAsString(requestDto);
-
-            CoapResponse coapResponse = client.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
-            jsonString = coapResponse.getResponseText();
-            requestDto = mapper.readValue(jsonString, RequestDto.class);
-        } catch (Exception ex) {
-
-        }
-        return requestDto;
-    }
 
     @GetMapping("get-all-data")
     public AllSensorState getData() {
@@ -52,33 +32,10 @@ public class ApiGateway {
             CoapResponse coapResponse = client.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
             jsonString = coapResponse.getResponseText();
             securitySensorState = mapper.readValue(jsonString, SecuritySensorState.class);
-
-            CoapObserveRelation relation = client.observe(
-                    new CoapHandler() {
-                        @Override
-                        public void onLoad(CoapResponse response) {
-                            String content = response.getResponseText();
-                            System.out.println("NOTIFICATION: " + content);
-                        }
-
-                        @Override
-                        public void onError() {
-                            System.err.println("OBSERVING FAILED (press enter to exit)");
-                        }
-                    });
-
         } catch (Exception ex) {
 
         }
         return securitySensorState;
     }
-
-    @GetMapping("start")
-    public void start() {
-        CoapServer server = new CoapServer(8085);
-        server.add(new MyResource("example"));
-        server.start();
-    }
-
 
 }

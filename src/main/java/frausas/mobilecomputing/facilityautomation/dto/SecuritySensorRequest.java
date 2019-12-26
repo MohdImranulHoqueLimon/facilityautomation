@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class SecuritySensorRequest {
-    int peopleExited;
-    int peopleEntered;
-    String securityPin;
+/*    int peopleExited;
+    int peopleEntered;*/
+    boolean evacuate;
+    String pin;
 }

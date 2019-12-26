@@ -3,6 +3,7 @@ package frausas.mobilecomputing.facilityautomation.Sensons;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import frausas.mobilecomputing.facilityautomation.dto.LightSensorRequest;
+import frausas.mobilecomputing.facilityautomation.sensorstate.DangerAlaramSensorState;
 import frausas.mobilecomputing.facilityautomation.sensorstate.LightSensorState;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
@@ -14,13 +15,13 @@ import java.util.TimerTask;
 
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 
-public class LightSensor extends ConcurrentCoapResource {
+public class DangerAlarmSensor extends ConcurrentCoapResource {
 
-    public static LightSensorState sensorState;
+    public static DangerAlaramSensorState sensorState;
 
-    public LightSensor(String name) {
-        super(name, 2);
-        sensorState = new LightSensorState();
+    public DangerAlarmSensor(String name) {
+        super(name, SINGLE_THREADED);
+        sensorState = new DangerAlaramSensorState();
 
         setObservable(true);
         setObserveType(CoAP.Type.CON);

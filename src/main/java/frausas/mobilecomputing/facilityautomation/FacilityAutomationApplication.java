@@ -57,7 +57,7 @@ public class FacilityAutomationApplication {
                             allSensorState.setSecuritySensorState(securitySensorState);
 
                             if(securitySensorState.isHasThief() && alarmRunning == false) {
-                                changeAlarmState(securitySensorState.isHasThief());
+                                FacilityAutomationApplication.changeAlarmState(securitySensorState.isHasThief());
                                 alarmRunning = true;
                             }
 

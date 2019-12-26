@@ -90,6 +90,9 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
                 if(securityPin != null && securityPin.equals(SensorConstants.SECURITY_PIN) == false) {
                     sensorState.setHasThief(true);
                 }
+                if(securityPin != null && securityPin.equals(SensorConstants.SECURITY_PIN) == true) {
+                    sensorState.setTotalPeople(sensorState.getTotalPeople() + 1);
+                }
                 changed();
                 String responseJson = mapper.writeValueAsString(sensorState);
                 exchange.respond(CREATED, responseJson);

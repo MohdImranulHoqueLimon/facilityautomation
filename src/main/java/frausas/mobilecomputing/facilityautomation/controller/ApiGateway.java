@@ -29,7 +29,7 @@ public class ApiGateway {
             ObjectMapper mapper = new ObjectMapper();
             String jsonString = mapper.writeValueAsString(requestDto);
 
-            if (requestDto.isEvacuate() == true) {
+            if(requestDto.isEvacuate() == true) {
                 FacilityAutomationApplication.changeAlarmState(false);
             }
 

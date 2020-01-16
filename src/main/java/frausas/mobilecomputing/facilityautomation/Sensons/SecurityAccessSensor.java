@@ -17,7 +17,7 @@ import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 
 public class SecurityAccessSensor extends ConcurrentCoapResource {
 
-    public static SecuritySensorState sensorState;
+    private SecuritySensorState sensorState;
 
     public SecurityAccessSensor(String name) {
 
@@ -29,7 +29,7 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
         getAttributes().setObservable();
 
         Timer timer = new Timer();
-        timer.schedule(new UpdateTask(), 0, 7000);
+        timer.schedule(new UpdateTask(), 0, 8000);
     }
 
     private class UpdateTask extends TimerTask {
@@ -54,7 +54,6 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
                 if(sensorState.getTotalPeople() < 0) {
                     sensorState.setTotalPeople(0);
                 }
-                //notify all observers
                 changed();
             }
         }
@@ -92,6 +91,7 @@ public class SecurityAccessSensor extends ConcurrentCoapResource {
                 }
                 if(securityPin != null && securityPin.equals(SensorConstants.SECURITY_PIN) == true) {
                     sensorState.setTotalPeople(sensorState.getTotalPeople() + 1);
+                    sensorState.setHasThief(false);
                 }
                 changed();
                 String responseJson = mapper.writeValueAsString(sensorState);

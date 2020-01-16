@@ -16,8 +16,7 @@ body {
     float: left;
     height: 274px;
     width: 147px;
-    margin: 20px;
-    margin-left: 0px;
+    margin-left: 27%;
     -webkit-perspective: 450;
     border-radius: 3px;
     box-sizing: border-box;
@@ -156,4 +155,101 @@ body {
 
 #toggle:checked + label:after {
     content: "ON"
+}
+
+.header-icon {
+    border-radius: 61px;
+    margin-right: 10px;
+}
+
+.danger-alarm {
+    top: 89px;
+    left: 15px;
+    position: absolute;
+}
+
+
+
+
+
+p {
+    color: #111;
+    z-index: 1;
+}
+
+.c-lightbulb {
+    position: absolute;
+    right: 32px;
+    top: 86px;
+}
+
+.c-lightbulb__top {
+    width: 10em;
+    height: 10em;
+    border-radius: 7em;
+    box-shadow: 0 0 0 1px #fff;
+    position: relative;
+}
+
+.c-lightbulb__top.active {
+    background-color: #fce876;
+    box-shadow: 0 0 200px 300px rgba(252,232,118,.5)
+}
+
+.c-lightbulb__filament {
+    width: 1px;
+    height: 4em;
+    background-color: #fff;
+    position: absolute;
+    bottom: 1px;
+}
+
+.c-lightbulb__filament--left {
+    left: 4em;
+    transform: skewX(10deg);
+}
+
+.c-lightbulb__filament--right {
+    right: 4em;
+    transform: skewX(-10deg);
+}
+
+.c-lightbulb__thread {
+    margin: auto;
+    border: 1px solid #fff;
+    border-top: 0;
+    margin-top: -.35em;
+}
+
+.c-lightbulb__thread__top {
+    width: 4em;
+    height: 3em;
+    border-radius: 0 0 2em 2em;
+}
+
+.c-lightbulb__thread__bottom {
+    width: 2em;
+    height: 1em;
+    border-radius: 0 0 1em 1em;
+}
+
+.btn {
+    margin: 1em;
+    padding: .5em;
+    font-size: 1em;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid;
+    outline: none;
+    cursor: pointer;
+}
+
+.btn-switch {
+    position: absolute;
+    right: 51px;
+    margin-top: 236px;
+}
+
+.fire-background {
+    background-image: url("/images/fire.gif");
 }

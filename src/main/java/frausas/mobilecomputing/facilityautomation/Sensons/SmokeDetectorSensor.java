@@ -2,39 +2,34 @@ package frausas.mobilecomputing.facilityautomation.Sensons;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import frausas.mobilecomputing.facilityautomation.dto.LightSensorRequest;
-import frausas.mobilecomputing.facilityautomation.sensorstate.LightSensorState;
+import frausas.mobilecomputing.facilityautomation.dto.SmokeRequestDto;
+import frausas.mobilecomputing.facilityautomation.sensorstate.SmokeDetectorSensorState;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.core.server.resources.ConcurrentCoapResource;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 
-public class LightSensor extends ConcurrentCoapResource {
+public class SmokeDetectorSensor extends ConcurrentCoapResource {
 
-    public static LightSensorState sensorState;
+    private SmokeDetectorSensorState smokeDetectorSensorState;
 
-    public LightSensor(String name) {
-        super(name, 2);
-        sensorState = new LightSensorState();
+    public SmokeDetectorSensor(String name) {
+
+        super(name, 1);
+        smokeDetectorSensorState = new SmokeDetectorSensorState();
 
         setObservable(true);
         setObserveType(CoAP.Type.CON);
         getAttributes().setObservable();
-        Timer timer = new Timer();
-        timer.schedule(new UpdateTask(), 0, 7000);
     }
 
     @Override
     public void handleGET(CoapExchange exchange) {
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonString = mapper.writeValueAsString(sensorState);
-            exchange.respond(jsonString);
+            exchange.respond(mapper.writeValueAsString(smokeDetectorSensorState));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -43,26 +38,23 @@ public class LightSensor extends ConcurrentCoapResource {
     @Override
     public void handlePOST(CoapExchange exchange) {
         exchange.accept();
+
         if (exchange.getRequestOptions().isContentFormat(MediaTypeRegistry.APPLICATION_JSON)) {
-            String json = exchange.getRequestText();
+            String jsonRequest = exchange.getRequestText();
             try {
                 ObjectMapper mapper = new ObjectMapper();
-                LightSensorRequest lightSensorRequest = mapper.readValue(json, LightSensorRequest.class);
-                sensorState.setOn(lightSensorRequest.isOn());
-                String responseJson = mapper.writeValueAsString(sensorState);
+                SmokeRequestDto requestDto = mapper.readValue(jsonRequest, SmokeRequestDto.class);
+
+                smokeDetectorSensorState.setSmoke(requestDto.isFire());
+
+                changed();
+                String responseJson = mapper.writeValueAsString(smokeDetectorSensorState);
                 exchange.respond(CREATED, responseJson);
             } catch (Exception ex) {
-                ex.printStackTrace();
+
             }
         } else {
             exchange.respond(CREATED);
-        }
-    }
-
-    private class UpdateTask extends TimerTask {
-        @Override
-        public void run() {
-            changed();
         }
     }
 }

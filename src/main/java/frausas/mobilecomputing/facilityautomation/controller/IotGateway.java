@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import frausas.mobilecomputing.facilityautomation.FacilityAutomationApplication;
 import frausas.mobilecomputing.facilityautomation.SensorConstants;
 import frausas.mobilecomputing.facilityautomation.dto.SecuritySensorRequest;
+import frausas.mobilecomputing.facilityautomation.dto.SmokeRequestDto;
 import frausas.mobilecomputing.facilityautomation.sensorstate.AllSensorState;
 import frausas.mobilecomputing.facilityautomation.sensorstate.SecuritySensorState;
 import org.eclipse.californium.core.*;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/gateway/")
-public class ApiGateway {
+public class IotGateway {
 
     @GetMapping("get-all-data")
     public AllSensorState getData() {
@@ -29,7 +30,7 @@ public class ApiGateway {
             ObjectMapper mapper = new ObjectMapper();
             String jsonString = mapper.writeValueAsString(requestDto);
 
-            if(requestDto.isEvacuate() == true) {
+            if (requestDto.isEvacuate() == true) {
                 FacilityAutomationApplication.changeAlarmState(false);
             }
 
@@ -45,6 +46,22 @@ public class ApiGateway {
     @PostMapping("stop-alarming")
     public SecuritySensorState stopAlarming(@RequestBody SecuritySensorRequest requestDto) {
         FacilityAutomationApplication.changeAlarmState(false);
+        return null;
+    }
+
+    @PostMapping("start-fire")
+    public SecuritySensorState startFire(@RequestBody SmokeRequestDto smokeRequestDto) {
+        try {
+            CoapClient smokeClient = new CoapClient("coap://localhost:" + SensorConstants.SMOKE_DETECTOR_SENSOR_PORT + "/" + SensorConstants.SMOKE_DETECTOR_SENSOR_ENDPOINT);
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonString = mapper.writeValueAsString(smokeRequestDto);
+
+            CoapResponse coapResponse = smokeClient.post(jsonString, MediaTypeRegistry.APPLICATION_JSON);
+            jsonString = coapResponse.getResponseText();
+        } catch (Exception ex) {
+
+        }
+
         return null;
     }
 

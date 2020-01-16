@@ -13,4 +13,6 @@ public class AllSensorState {
     LightSensorState lightSensorState;
     SecuritySensorState securitySensorState;
     DangerAlaramSensorState alaramSensorState;
+    SmokeDetectorSensorState smokeDetectorSensorState;
+    FireSprinklerState fireSprinklerState;
 }

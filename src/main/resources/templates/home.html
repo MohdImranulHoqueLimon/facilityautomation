@@ -5,102 +5,181 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Spring Boot Mobile Computing</title>
 
-    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+
+    <link type="text/css" rel="stylesheet" th:href="@{/css/all.min.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css">
+
+    <link type="text/css" rel="stylesheet" th:href="@{/css/freelancer.css}"/>
 </head>
 
-<body>
-<div class="row">
-    <div class="col-md-12 text-center" style="background: #2e6da4;">
-        <h3 style="color: white; font-weight: bold;">IOT FACILITY AUTOMATION</h3>
+<body id="page-top">
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+    <div class="container">
+        <img th:src="@{/images/iot.jpg}" width="65" class="header-icon">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Facilities Automation</a>
+        <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded"
+                type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Sensors</a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About & Manual</a>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
+</nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="col-md-6">
-                <div class="col-md-4">
-                    <div style="width: 20%; height: 20%; float: left;">
-                        <div class="perspective" onclick="openDoor(this)">
-                            <div class="thumb">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8" style="margin-top: 20px;">
-                    <div class="row"><label style="font-size: 25px;">Total Entry: </label>
-                        <span style="font-size: 25px; color: #5cb85c;" id="total-entry"></span></div>
-                    <div class="row"><label style="font-size: 25px; color: red;">Total Exit: </label>
-                        <span style="font-size: 25px;" id="total-exit"></span></div>
-                    <div class="row"><label style="font-size: 25px;">Total People Inside: </label>
-                        <span style="font-size: 25px;" id="total-people-inside"></span></div>
+<header id="emulation-section" class="masthead bg-primary text-white text-center">
 
-                    <div class="row">
-                        <input type="button" value="Evacuate Manually" onclick="evacuateManually()" class="btn btn-sm btn-success"/>
-                    </div>
+    <div class="container d-flex align-items-center flex-column">
 
-                    <div class="row" style="margin-top: 5px;">
-                        <form class="form-inline">
-                            <div class="form-group mb-2">
-                                <input type="text" style="width: 98px;" readonly disabled class="form-control-plaintext" id="staticEmail2" value="Entry With Pin">
-                            </div>
-                            <div class="form-group mx-sm-3 mb-2">
-                                <label for="pin" class="sr-only">Password</label>
-                                <input type="password" class="form-control" id="pin" placeholder="hint = 13579">
-                            </div>
-                            <button type="button" onclick="confirmIdentity()" class="btn btn-primary mb-2">Confirm identity</button>
-                        </form>
-                    </div>
-                </div>
+        <h1 class="masthead-heading text-uppercase mb-0">Monitor & Emulate Activities</h1>
+
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon">
+                <i class="fas fa-star"></i>
             </div>
-            <div class="col-md-6" style="margin-top: 20px;">
-                <div style="background: #d5d5d5;">
-                    <input type="checkbox" checked name="toggle" id="toggle"/>
-                    <label for="toggle"></label>
-                    <svg xmlns="http://www.w3.org/2000/svg" id="bulb" viewBox="0 0 154.72 276.77">
-                        <path d="M55.2 139.26l-.5 1.67 4.63 15.48.5-1.67-4.63-15.48zM85.62 123.84l-.5 1.67 4.63 15.48.49-1.67-4.62-15.48z"
-                              class="filament"/>
-                        <path d="M90.24 139.32l-.49 1.67 4.62 15.48.5-1.67-4.63-15.48zM68.11 123.84l-.5 1.67 4.62 15.48.5-1.67-4.62-15.48z"
-                              class="filament"/>
-                        <path d="M72.73 139.32l-.5 1.67 4.63 15.48.5-1.67-4.63-15.48zM58.85 154.8l.5 1.67 4.63-15.48-.5-1.67-4.63 15.48z"
-                              class="filament"/>
-                        <path d="M76.36 154.8l.5 1.67 4.63-15.48-.5-1.67-4.63 15.48zM63.48 139.32l.5 1.67 4.62-15.48-.49-1.67-4.63 15.48zM80.99 139.32l.5 1.67 4.62-15.48-.49-1.67-4.63 15.48zM93.88 154.8l.49 1.67L99 140.99l-.5-1.67-4.62 15.48z"
-                              class="filament"/>
-                        <rect width="2.36" height="59.85" x="53.05" y="138.65" class="prong" rx="1.18" ry="1.18"/>
-                        <rect width="2.36" height="58.81" x="98.3" y="138.65" class="prong" rx="1.18" ry="1.18"/>
-                        <path d="M41.05 193.11h71.61v46.03H41.05z" class="cls-2"/>
-                        <ellipse cx="76.85" cy="239.14" class="cls-2" rx="35.81" ry="37.63"/>
-                        <rect width="83" height="6.33" x="276.75" y="505.69" class="cls-3" rx="3.17" ry="3.17"
-                              transform="rotate(13.12 1474.696 -687.534)"/>
-                        <rect width="83" height="6.33" x="277.26" y="518.19" class="cls-3" rx="3.17" ry="3.17"
-                              transform="rotate(13.12 1475.208 -675.038)"/>
-                        <rect width="83" height="6.33" x="277.51" y="530.7" class="cls-3" rx="3.17" ry="3.17"
-                              transform="rotate(13.12 1475.454 -662.554)"/>
-                        <rect width="27.39" height="6.33" x="278.36" y="536.89" class="cls-3" rx="3.17" ry="3.17"
-                              transform="rotate(13.12 1448.504 -656.327)"/>
-                        <rect width="27.47" height="6.33" x="330.82" y="499.48" class="cls-3" rx="3.17" ry="3.17"
-                              transform="rotate(13.12 1500.99 -693.73)"/>
-                        <g class="cls-4">
-                            <rect width="94.5" height="30.6" x="30.11" y="169.86" class="cls-5" rx="12.26" ry="12.26"/>
-                            <circle cx="77.36" cy="77.36" r="77.36" class="cls-5"/>
-                            <path d="M16.24 124.35c4 0 13.86 40.77 13.86 57.21h94.5c0-16.44 9.88-57.21 13.86-57.21H16.24z"
-                                  class="cls-5"/>
-                        </g>
-                    </svg>
+            <div class="divider-custom-line"></div>
+        </div>
 
-                </div>
+        <img th:src="@{/images/fire-sprinkler.gif}" id="sprinkler" width="300"
+             style="border-color: #ffba50; display: none;"/>
+
+        <div class="row">
+            <label style="font-size: 25px; margin-left: 24%;">Entry: <span id="total-entry">0</span></label>
+            <label style="font-size: 25px; color: red;">Exit: <span id="total-exit">0</span></label>
+            <label style="font-size: 25px;">People Inside: <span id="total-people-inside">0</span></label>
+            <br/>
+            <div class="perspective" onclick="openDoor(this)">
+                <div class="thumb"></div>
+            </div>
+            <button type="button" onclick="confirmIdentity()"
+                    style="background: #28564d; margin: 0px;"
+                    class="btn btn-primary mb-2">Confirm identity
+            </button>
+        </div>
+
+        <input type="password" class="form-control"
+               style="width: 35%;" id="pin" placeholder="Enter home with security pin, hint = 13579">
+        <input type="button" value="Evacuate Home Manually" onclick="evacuateManually()" class="btn btn-sm btn-success"/> <br/>
+
+        <img id="danger-alarm" th:src="@{/images/danger-alarm-off.png}" class="danger-alarm" width="100"/>
+
+        <div style="position: absolute; left: 155px; top: 94px; width: 195px;">
+            <img th:src="@{/images/smoke-detector.png}" width="200"/>
+            <button class="btn btn-danger" onclick="startSmoking()">Start Smoking</button>
+        </div>
+
+        <audio id="myAudio">
+            <source th:src="@{/sound/danger-sound.mp3}" type="audio/mpeg">
+        </audio>
+
+        <div class="c-lightbulb">
+            <div class="c-lightbulb__top">
+                <div class="c-lightbulb__filament c-lightbulb__filament--left"></div>
+                <div class="c-lightbulb__filament c-lightbulb__filament--right"></div>
+            </div>
+            <div class="c-lightbulb__thread c-lightbulb__thread__top"></div>
+            <div class="c-lightbulb__thread c-lightbulb__thread__bottom"></div>
+        </div>
+        <button class="btn btn-success btn-switch" id="light-switch">On/Off</button>
+    </div>
+</header>
+
+<!-- Portfolio Section -->
+<section class="page-section portfolio" id="portfolio">
+    <div class="container">
+
+        <!-- Portfolio Section Heading -->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Sensors & Actuators</h2>
+
+        <!-- Icon Divider -->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="divider-custom-line"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-lg-4">
+                <img class="img-fluid" style="width: 250px;" th:src="@{/images/smoke-detector.png}" alt="">
+                <h3>Smoking Detector</h3>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <img class="img-fluid" style="width: 200px;" th:src="@{/images/danger-alarm-on.png}" alt="">
+                <h3>Danger Alarm</h3>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <i class="fa fa-lightbulb fa-9x"></i>
+                <h3>Light Actuator</h3>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <i class="fa fa-door-open fa-9x"></i>
+                <h3>Security Door Sensor</h3>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- About Section -->
+<section class="page-section bg-primary text-white mb-0" id="about" style="padding-top: 25px;">
+    <div class="container">
+        <h2 class="page-section-heading text-center text-uppercase text-white">About & Manual</h2>
+
+        <div class="row">
+            <div class="col-lg-12 ml-auto">
+                <p class="lead">
+                    Facilities Automation is an IOT solution for a home security system. This iot solution has an
+                    emulation system
+                    where we can see people entering and exiting from a home with the help of security door sensor.
+                    We also get notified if someone enter with a wrong door pin. Smoke detector sensor used to detect
+                    smoke or fire.
+                    fire water sprinkle, danger alarm and light actuator are used to fulfill our facility.
+                </p>
+
+                <ul>
+                    <li>Click Start smoking button to produce smoke or fire</li>
+                    <li>Enter a wrong pin code in text field and click in confirm identity</li>
+                    <li>Enter a correct pin code (13579) to stop danger alarm</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="copyright py-4 text-center text-white">
+    <div class="container">
+        <small>Mohd Imranul Hoque Limon Matriculation No: 1276493</small>
+    </div>
+</section>
+
+<script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.xml2json.js}"></script>
+<!--<script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>-->
+<script type="text/javascript" th:src="@{/js/facility.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.easing.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/freelancer.min.js}"></script>
 
 </body>
 
-<footer>
-    <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
-    <script type="text/javascript" th:src="@{/js/jquery.xml2json.js}"></script>
-    <script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
-    <script type="text/javascript" th:src="@{/js/facility.js}"></script>
-</footer>
 </html>

@@ -14,11 +14,11 @@ import java.util.TimerTask;
 
 import static org.eclipse.californium.core.coap.CoAP.ResponseCode.CREATED;
 
-public class DangerAlarmSensor extends ConcurrentCoapResource {
+public class DangerAlarmActuator extends ConcurrentCoapResource {
 
     public static DangerAlaramSensorState dangerAlaramSensorState;
 
-    public DangerAlarmSensor(String name) {
+    public DangerAlarmActuator(String name) {
 
         super(name, SINGLE_THREADED);
         dangerAlaramSensorState = new DangerAlaramSensorState();
@@ -28,7 +28,7 @@ public class DangerAlarmSensor extends ConcurrentCoapResource {
         getAttributes().setObservable();
 
         Timer timer = new Timer();
-        timer.schedule(new UpdateTask(), 0, 7000);
+        timer.schedule(new UpdateTask(), 0, 3000);
     }
 
     @Override
@@ -64,7 +64,6 @@ public class DangerAlarmSensor extends ConcurrentCoapResource {
     private class UpdateTask extends TimerTask {
         @Override
         public void run() {
-            System.out.println(dangerAlaramSensorState.toString());
             changed();
         }
     }
